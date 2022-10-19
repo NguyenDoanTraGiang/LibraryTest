@@ -11,7 +11,23 @@ import java.util.*;
 public class ReaderController {
     private List<Reader> readers = new ArrayList<>();
 
+
+    /**
+     * get all readers
+     */
     @GetMapping("/readers")
+    public List<Reader> getReaderList(){
+        return readers;
+    }
+
+    /**
+     * get a specific reader using id
+     */
+
+    @GetMapping("/readers/{readerId}")
+    public Reader getReader(@PathVariable(name = "readerId") Integer readerId){
+        return readers.get(readerId);
+    }
 
     /**
      * add new reader
