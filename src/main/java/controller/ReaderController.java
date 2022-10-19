@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/library")
 public class ReaderController {
     private List<Reader> readers = new ArrayList<>();
 
