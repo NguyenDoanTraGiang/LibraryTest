@@ -3,6 +3,7 @@ package entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
