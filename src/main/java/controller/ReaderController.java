@@ -17,6 +17,6 @@ public class ReaderController {
     @PostMapping("/addReader")
     public ResponseEntity addReader(@RequestBody Reader reader){
         readers.add(reader);
-        ResponseEntity.ok().body(reader);
+        return ResponseEntity.ok().body(reader);
     }
 }
