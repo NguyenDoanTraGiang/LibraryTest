@@ -60,4 +60,16 @@ public class ReaderController {
         final Reader updatedReader = readerRepository.save(reader);
         return ResponseEntity.ok(updatedReader);
     }
+
+    @DeleteMapping("/readers/{id}")
+    public Map<String, Boolean> deleteReader(@PathVariable(value = "readerId") Integer readerId)
+            throws ResourceNotFoundException {
+        Reader reader = readerRepository.findById(readerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Reader not found by this id: " + readerId));
+
+        readerRepository.delete(reader);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return response;
+    }
 }
