@@ -1,6 +1,6 @@
-package Repository;
+package com.Repository;
 
-import entity.Reader;
+import com.entity.Reader;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

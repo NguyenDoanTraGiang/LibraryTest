@@ -1,4 +1,4 @@
-package Exception;
+package com.Exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

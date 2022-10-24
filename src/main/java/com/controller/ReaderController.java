@@ -1,11 +1,11 @@
-package controller;
+package com.controller;
 
-import Repository.ReaderRepository;
-import entity.Reader;
+import com.Repository.ReaderRepository;
+import com.entity.Reader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import Exception.ResourceNotFoundException;
+import com.Exception.ResourceNotFoundException;
 
 import java.util.*;
 
