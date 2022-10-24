@@ -2,6 +2,7 @@ package controller;
 
 import Repository.ReaderRepository;
 import entity.Reader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import Exception.ResourceNotFoundException;
@@ -11,8 +12,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/library")
 public class ReaderController {
+    @Autowired
     private ReaderRepository readerRepository;
-
 
     /**
      * get all readers
