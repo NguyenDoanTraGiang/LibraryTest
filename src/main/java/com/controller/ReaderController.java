@@ -2,25 +2,36 @@ package com.controller;
 
 import com.Repository.ReaderRepository;
 import com.entity.Reader;
+import com.service.ReaderService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.Exception.ResourceNotFoundException;
+import com.dto.ReaderDTO;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/library")
 public class ReaderController {
     @Autowired
-    private ReaderRepository readerRepository;
+    private ModelMapper modelMapper;
+
+    private ReaderService readerService;
+    public ReaderController(ReaderService readerService){
+        super();
+        this.readerService = readerService;
+    }
 
     /**
      * get all readers
      */
     @GetMapping("/readers")
-    public List<Reader> getReaderList(){
-        return readerRepository.findAll();
+    public List<ReaderDTO> getReaderList(){
+        return readerService.getReaderList().stream().map(reader -> modelMapper.map(reader, ReaderDTO.class)).collect(Collectors.toList());
     }
 
     /**
@@ -30,47 +41,39 @@ public class ReaderController {
     @GetMapping("/readers/{readerId}")
     public ResponseEntity getReaderById (@PathVariable(name = "readerId") Integer readerId)
             throws ResourceNotFoundException {
-            Reader reader = readerRepository.findById(readerId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Reader not found by this id: " + readerId));
-
-        return ResponseEntity.ok().body(reader);
+            Reader reader = readerService.getReaderById(readerId);
+            ReaderDTO response = modelMapper.map(reader, ReaderDTO.class);
+            return ResponseEntity.ok().body(response);
     }
 
     /**
      * add new reader
      */
     @PostMapping("/readers")
-    public Reader createReader(@RequestBody Reader reader){
-        return readerRepository.save(reader);
+    public ResponseEntity<ReaderDTO> createReader(@RequestBody ReaderDTO readerDTO){
+        Reader readerRequest = modelMapper.map(readerDTO, Reader.class);
+        Reader reader = readerService.createReader(readerRequest);
+
+        ReaderDTO readerResponse = modelMapper.map(reader, ReaderDTO.class);
+        return new ResponseEntity<ReaderDTO>(readerResponse, HttpStatus.CREATED);
     }
 
     /**
      *  Update a reader
      */
 
-    @PutMapping("/readers/{id}")
-    public ResponseEntity<Reader> updateEmployee(@PathVariable(value = "readerId") Integer readerId, @RequestBody Reader readerDetails)
+    @PutMapping("/readers/{readerId}")
+    public ResponseEntity<ReaderDTO> updateReader(@PathVariable(value = "readerId") Integer readerId, @RequestBody ReaderDTO readerDTO)
         throws ResourceNotFoundException {
-        Reader reader = readerRepository.findById(readerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Reader not found by this id: " + readerId));
+        Reader readerRequest = modelMapper.map(readerDTO, Reader.class);
+        Reader reader = readerService.updateReader(readerId, readerRequest);
 
-        reader.setEmail(readerDetails.getEmail());
-        reader.setName(readerDetails.getName());
-        reader.setPhoneNum(readerDetails.getPhoneNum());
-
-        final Reader updatedReader = readerRepository.save(reader);
-        return ResponseEntity.ok(updatedReader);
+        ReaderDTO readerResponse = modelMapper.map(reader, ReaderDTO.class);
+        return ResponseEntity.ok().body(readerResponse);
     }
 
-    @DeleteMapping("/readers/{id}")
-    public Map<String, Boolean> deleteReader(@PathVariable(value = "readerId") Integer readerId)
-            throws ResourceNotFoundException {
-        Reader reader = readerRepository.findById(readerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Reader not found by this id: " + readerId));
-
-        readerRepository.delete(reader);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
+    @DeleteMapping("/readers/{readerId}")
+    public Map<String, Boolean> deleteReader(@PathVariable(value = "readerId") Integer readerId) throws ResourceNotFoundException {
+        return readerService.deleteReader(readerId);
     }
 }
